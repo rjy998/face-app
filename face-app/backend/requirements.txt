@@ -1,0 +1,52 @@
+# ============================================================
+# 后端依赖清单（Python 3.10+，推荐 3.11 / 3.12）
+# 安装：pip install -r requirements.txt
+# ============================================================
+
+# --- Web 框架 ---
+fastapi>=0.110,<1.0
+uvicorn[standard]>=0.27          # 生产可用；最小安装可改为 uvicorn
+python-multipart>=0.0.9          # 处理 multipart 文件上传
+
+# --- 数据层 ---
+sqlalchemy>=2.0
+pydantic>=2.5
+
+# --- 配置 / 网络 ---
+python-dotenv>=1.0
+httpx>=0.26                      # 调用大模型与 Embedding 接口
+
+# --- 认证安全 ---
+bcrypt>=4.1                      # 密码哈希（缺省时会退化为 PBKDF2，但不建议）
+PyJWT>=2.8                       # JWT 签发与校验
+
+# --- 图像与特征 ---
+numpy>=1.26
+# 注意：OpenCV 5.x 移除了 Haar 级联（cv2.CascadeClassifier），会导致兜底引擎不可用，
+# 因此这里限制在 4.x（5.x 仍可用，但需要装 mediapipe 或改接云 API）。
+opencv-python-headless>=4.9,<5
+pillow>=10.2
+
+# --- 本地人脸关键点（推荐方案，免费且隐私好，478 个关键点）---
+# MediaPipe 1.x 只提供 Tasks API，首次分析会自动下载 3.6MB 的 face_landmarker.task；
+# 离线环境请手动放到 backend/storage/models/，或设 FACE_LANDMARKER_AUTO_DOWNLOAD=false 走兜底。
+# 注意：mediapipe 会依赖 opencv-contrib-python，若它把 cv2 升到 5.x，Haar 兜底引擎会不可用
+# （OpenCV 5 移除了 CascadeClassifier）——此时 MediaPipe 正常即可，/api/health 里能看出引擎状态。
+mediapipe>=1.0.0
+
+# --- 原始资料（PDF / 扫描古籍）构建知识库：scripts/auto_build_kb.py ---
+pymupdf>=1.24                    # 必需：PDF 文字层直抽 + 扫描页栅格化给 OCR
+# 中文 OCR（两个都装也行，脚本按 paddleocr → rapidocr 顺序自动挑可用的）
+rapidocr-onnxruntime>=1.2        # 轻量推荐：PP-OCR 模型的 onnxruntime 版，无需 paddle
+# paddleocr>=3.0                 # 效果略好但依赖重（paddlepaddle 100MB+），且它会要求
+#                                # numpy<2.4 + opencv-contrib 4.10，与本文件里的
+#                                # opencv-python-headless<5 组合冲突；如确实要用 PaddleOCR，
+#                                # 建议单独建一个虚拟环境，见 knowledge_base/README.md
+
+# --- 可选：本地语义向量（把 EMBEDDING_PROVIDER 设为 bge 时安装）---
+# sentence-transformers>=2.5
+# --- 可选：ChromaDB 向量库（VECTOR_STORE=chroma）---
+# chromadb>=0.4
+# --- 生产数据库驱动（docker-compose 的 MySQL 方案需要 pymysql）---
+pymysql>=1.1
+# psycopg[binary]>=3.1           # PostgreSQL 方案

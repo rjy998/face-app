@@ -1,0 +1,88 @@
+# ============================================================
+# 生产编排：后端 + MySQL + Redis + Nginx
+# 使用（在 face-app/ 目录）：
+#   cp backend/.env.example .env      # 填好密钥，并把 DATABASE_URL 换成 mysql
+#   docker compose -f docker/docker-compose.yml --env-file .env up -d --build
+#   curl http://127.0.0.1:8000/api/health
+# ============================================================
+services:
+  backend:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    image: face-app-backend:latest
+    restart: unless-stopped
+    environment:
+      APP_ENV: prod
+      DEBUG: "false"
+      DATABASE_URL: mysql+pymysql://face_user:${MYSQL_PASSWORD:-change_me}@mysql:3306/face_app?charset=utf8mb4
+      REDIS_URL: redis://redis:6379/0
+      JWT_SECRET: ${JWT_SECRET:-please-change-me}
+      SIGNED_URL_SECRET: ${SIGNED_URL_SECRET:-please-change-me-too}
+      ARK_API_KEY: ${ARK_API_KEY:-}
+      ARK_MODEL: ${ARK_MODEL:-doubao-seed-1-6-250615}
+      LLM_PROVIDER: ${LLM_PROVIDER:-doubao}
+      EMBEDDING_PROVIDER: ${EMBEDDING_PROVIDER:-local}
+      KB_INGEST_TOKEN: ${KB_INGEST_TOKEN:-}
+      STORAGE_DIR: /app/storage
+      RATE_LIMIT_PER_MINUTE: ${RATE_LIMIT_PER_MINUTE:-30}
+    volumes:
+      - backend_storage:/app/storage          # 照片与 SQLite（换对象存储后可去掉）
+    ports:
+      - "127.0.0.1:8000:8000"                 # 只对本机开放，由 Nginx 反向代理
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    networks: [face-net]
+
+  mysql:
+    image: mysql:8.0
+    restart: unless-stopped
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-change_root_password}
+      MYSQL_DATABASE: face_app
+      MYSQL_USER: face_user
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-change_me}
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-p${MYSQL_ROOT_PASSWORD:-change_root_password}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    networks: [face-net]
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    command: ["redis-server", "--appendonly", "yes"]
+    volumes:
+      - redis_data:/data
+    networks: [face-net]
+
+  nginx:
+    image: nginx:1.27-alpine
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ../deploy/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+      - ../frontend:/usr/share/nginx/html:ro
+      - ./certs:/etc/nginx/certs:ro              # certbot 生成的证书目录
+      - certbot_www:/var/www/certbot
+    depends_on: [backend]
+    networks: [face-net]
+
+volumes:
+  backend_storage:
+  mysql_data:
+  redis_data:
+  certbot_www:
+
+networks:
+  face-net:
+    driver: bridge

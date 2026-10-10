@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>隐私政策 · 面相识别解读</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <header class="nav">
+    <span class="logo">隐私政策</span>
+    <span class="spacer"></span>
+    <a href="index.html">返回首页</a>
+  </header>
+
+  <main class="wrap">
+    <section class="card">
+      <h2>隐私政策（含人脸信息处理说明）</h2>
+      <p class="muted">生效日期：以部署方公布日期为准。本模板需由部署运营方补充主体名称与联系方式后对外使用。</p>
+
+      <h3>一、我们收集哪些信息</h3>
+      <ul>
+        <li><strong>账号信息</strong>：用户名与密码。密码仅以不可逆哈希（bcrypt）形式保存，我们无法还原你的原始密码。</li>
+        <li><strong>人脸照片</strong>：你主动上传的正面照片，属于<strong>敏感个人信息</strong>。仅在你明确勾选同意后进行上传与处理。</li>
+        <li><strong>面部特征数据</strong>：由照片计算得到的比例类特征（三庭五眼、脸型、五官比例、画面气色观感），以及由此生成的解读文本。</li>
+      </ul>
+
+      <h3>二、我们如何使用这些信息</h3>
+      <ul>
+        <li>在服务器端（或本地部署环境）完成人脸检测与特征计算；</li>
+        <li>用特征到文化知识库中检索相关条目，生成一份面相文化趣味解读；</li>
+        <li>保存解读历史，供你本人登录后回看。</li>
+      </ul>
+      <p>我们<strong>不会</strong>将你的人脸照片用于人脸识别身份认证、不会用于训练模型、不会出售或提供给第三方用于营销。</p>
+
+      <h3>三、存储与保护</h3>
+      <ul>
+        <li>照片存放于<strong>私有存储</strong>（私有目录或对象存储私有桶），访问需要带签名的临时地址，地址有效期默认 15 分钟；</li>
+        <li>数据库中的记录与账号绑定，接口层面做归属校验，其他用户无法读取你的记录；</li>
+        <li>传输过程使用 HTTPS（生产环境必须启用）；</li>
+        <li>人脸照片与解读文本会一直保存，直到你主动删除。</li>
+      </ul>
+
+      <h3>四、你的权利</h3>
+      <ul>
+        <li><strong>删除权</strong>：在「历史记录」页可随时删除任意一条记录，照片与解读会一并永久删除；</li>
+        <li><strong>撤回同意</strong>：停止使用并删除记录即视为撤回同意；</li>
+        <li><strong>查询与更正</strong>：可随时查看自己的历史记录；如需更正账号信息，请联系运营方。</li>
+      </ul>
+
+      <h3>五、未成年人</h3>
+      <p>本应用不面向未满 14 周岁的儿童。若你是未成年人，请在监护人陪同下使用，并由监护人同意相关处理。</p>
+
+      <h3>六、关于解读内容的性质</h3>
+      <p>本应用的解读内容基于传统面相文化常识生成，属于<strong>传统文化趣味参考</strong>，不是科学结论，不构成任何命运、健康、婚姻、投资建议，也不承诺任何结果。</p>
+
+      <h3>七、政策更新与联系方式</h3>
+      <p>政策如有更新会在本页面公布。如有疑问或投诉，请通过部署方公布的联系邮箱与我们联系。</p>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <a href="privacy.html">隐私政策</a>·<a href="terms.html">用户协议</a>·<a href="authorization.html">数据授权书</a>
+  </footer>
+</body>
+</html>

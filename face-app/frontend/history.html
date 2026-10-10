@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>历史记录 · 面相识别解读</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <header class="nav">
+    <span class="logo">我的历史记录</span>
+    <span class="spacer"></span>
+    <a href="index.html">再测一张</a>
+    <span id="navUser"></span>
+  </header>
+
+  <main class="wrap">
+    <div class="notice">
+      记录只对你本人可见。你可以随时删除任意记录，删除后照片与解读会一并永久移除。
+    </div>
+    <div id="message"></div>
+    <div id="list"></div>
+    <div class="center" style="margin-top:16px">
+      <button class="btn ghost" id="btnMore" type="button" hidden>加载更多</button>
+    </div>
+  </main>
+
+  <footer class="foot">
+    <a href="privacy.html">隐私政策</a>·<a href="terms.html">用户协议</a>·<a href="authorization.html">数据授权书</a>
+  </footer>
+
+  <script src="js/api.js"></script>
+  <script src="js/history.js"></script>
+</body>
+</html>

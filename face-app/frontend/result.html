@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>解读结果 · 面相识别解读</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <header class="nav">
+    <span class="logo">解读结果</span>
+    <span class="spacer"></span>
+    <a href="index.html">再测一张</a>
+    <a href="history.html">历史记录</a>
+  </header>
+
+  <main class="wrap">
+    <div id="message"></div>
+
+    <!-- 照片 + 基本信息 -->
+    <section class="card" id="photoCard" hidden>
+      <div class="record">
+        <img id="photo" alt="分析用的照片" />
+        <div class="body">
+          <div class="title" id="faceShape">—</div>
+          <div class="desc" id="metaLine">—</div>
+          <div id="tags"></div>
+          <button class="btn danger small" id="btnDelete" type="button" style="margin-top:8px">删除这条记录与照片</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 解读正文 -->
+    <section class="card">
+      <h2>面相趣味解读</h2>
+      <div class="reading" id="reading">正在加载…</div>
+      <div class="notice" id="disclaimer" style="margin-top:12px"></div>
+    </section>
+
+    <!-- 结构化特征 -->
+    <section class="card" id="featureCard" hidden>
+      <h2>识别到的面部特征</h2>
+      <div id="warnings"></div>
+
+      <h3>三庭比例</h3>
+      <div id="courts"></div>
+
+      <h3>五眼比例</h3>
+      <div id="eyes"></div>
+
+      <h3>五官与轮廓</h3>
+      <div id="facial"></div>
+
+      <h3>气色与对称度</h3>
+      <div id="complexion"></div>
+    </section>
+
+    <!-- 知识来源（RAG 可解释性） -->
+    <section class="card" id="kbCard" hidden>
+      <h2>解读引用的知识片段</h2>
+      <p class="muted" id="kbQuery"></p>
+      <div id="kbRefs"></div>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <a href="privacy.html">隐私政策</a>·<a href="terms.html">用户协议</a>·<a href="authorization.html">数据授权书</a>
+    <div style="margin-top:6px">传统文化趣味参考 · 不承诺任何命运结果</div>
+  </footer>
+
+  <script src="js/api.js"></script>
+  <script src="js/result.js"></script>
+</body>
+</html>

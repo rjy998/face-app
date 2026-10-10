@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>面相识别解读 · 传统文化趣味参考</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <!-- 顶部导航 -->
+  <header class="nav">
+    <span class="logo">面相识别解读</span>
+    <span class="spacer"></span>
+    <a href="index.html">首页</a>
+    <a href="history.html">历史记录</a>
+    <span id="navUser"></span>
+  </header>
+
+  <main class="wrap">
+    <!-- 定位声明（合规） -->
+    <div class="notice">
+      本应用是<strong>传统文化趣味参考</strong>工具，基于面相文化常识做趣味解读，
+      不做算命、不承诺命运结果，也不构成健康或投资建议。
+    </div>
+
+    <!-- 上传卡片 -->
+    <section class="card">
+      <h2>上传一张正面清晰照片</h2>
+      <p class="muted">可以用电脑摄像头现拍，也可以从相册选择 / 拖拽 / 直接粘贴截图。支持 JPG / PNG / WebP，不超过 10MB。</p>
+
+      <!-- 选择区：预览图会覆盖在虚线框上，不另外占一块 -->
+      <div class="picker" id="picker">
+        <div id="dropzone" class="dropzone">
+          <div class="icon">📷</div>
+          <div><strong>点击选择照片</strong>，或把图片拖到这里</div>
+          <div class="muted" style="margin-top:6px">照片只在内存中预览并上传，前端不做本地保存</div>
+        </div>
+
+        <div id="preview" class="preview" hidden>
+          <img id="previewImg" alt="待分析照片预览" title="点击可重新选择照片" />
+          <button class="clear" id="btnClear" type="button" title="移除照片">×</button>
+        </div>
+      </div>
+
+      <div class="row" style="margin-top:12px">
+        <button class="btn ghost" id="btnCamera" type="button">用摄像头拍照</button>
+        <button class="btn ghost" id="btnPick" type="button">从文件选择</button>
+      </div>
+
+      <input id="fileInput" type="file" accept="image/jpeg,image/png,image/webp" hidden />
+      <!-- 移动端 / 无法调用 getUserMedia 时，退化为系统相机或文件选择 -->
+      <input id="cameraInput" type="file" accept="image/*" capture="user" hidden />
+
+      <label class="consent">
+        <input type="checkbox" id="consent" />
+        <span>
+          我已阅读并同意<a href="authorization.html" target="_blank">《人脸信息处理授权书》</a>、
+          <a href="privacy.html" target="_blank">《隐私政策》</a>与<a href="terms.html" target="_blank">《用户协议》</a>，
+          同意上传照片用于生成面相趣味解读，并可随时在历史记录中删除。
+        </span>
+      </label>
+
+      <button class="btn block" id="btnAnalyze" type="button" style="margin-top:14px" disabled>开始分析</button>
+      <div class="progress" id="progress"><i></i></div>
+      <div class="loading-box" id="loadingBox" hidden>
+        <span class="spinner dark"></span>
+        <span id="loadingText">正在检测人脸关键点…</span>
+      </div>
+      <div id="message"></div>
+    </section>
+
+    <!-- 分析流程说明 -->
+    <section class="card">
+      <h2>分析是怎么做的</h2>
+      <ol class="muted" style="padding-left:18px;margin:8px 0 0">
+        <li>人脸检测：提取面部关键点，计算三庭五眼、脸型、五官比例与画面气色观感；</li>
+        <li>知识检索：用这些特征到面相文化知识库中检索相关条目（RAG）；</li>
+        <li>生成解读：把「特征 + 知识片段」一起交给大模型，输出有依据的趣味解读；</li>
+        <li>结果保存：解读与照片存入你的账号，可随时回看或删除。</li>
+      </ol>
+    </section>
+  </main>
+
+  <!-- 摄像头拍照弹窗 -->
+  <div class="modal-mask" id="cameraModal">
+    <div class="modal">
+      <h3>用摄像头拍照</h3>
+      <p class="muted">请让面部正对镜头、光线充足、不要遮挡，然后点「拍摄」。</p>
+      <video id="cameraVideo" class="camera-video" playsinline autoplay muted></video>
+      <div id="cameraMessage"></div>
+      <div class="actions">
+        <button class="btn ghost" id="btnCameraCancel" type="button">取消</button>
+        <button class="btn" id="btnCameraShot" type="button">拍摄</button>
+      </div>
+      <button class="btn ghost small" id="btnCameraFallback" type="button" style="margin-top:10px;width:100%">
+        没有摄像头？改用系统相机 / 选择文件
+      </button>
+    </div>
+  </div>
+
+  <!-- 上传前授权确认弹窗（合规硬性要求） -->
+  <div class="modal-mask" id="consentModal">
+    <div class="modal">
+      <h3>上传前请确认</h3>
+      <p>人脸信息属于敏感个人信息。本次上传的照片将用于：</p>
+      <ul class="muted">
+        <li>在服务器端提取面部关键点与比例特征；</li>
+        <li>生成一份面相文化趣味解读，并保存到你的账号历史中；</li>
+        <li>照片以私有方式存储，仅通过带签名的临时地址访问，不会公开展示。</li>
+      </ul>
+      <p class="muted">
+        你可以随时在「历史记录」中删除任意记录及其照片；不同意上述处理请点击取消。
+        详见<a href="authorization.html" target="_blank">《人脸信息处理授权书》</a>。
+      </p>
+      <div class="actions">
+        <button class="btn ghost" id="btnCancelConsent" type="button">取消</button>
+        <button class="btn" id="btnAgree" type="button">同意并开始分析</button>
+      </div>
+    </div>
+  </div>
+
+  <footer class="foot">
+    <a href="privacy.html">隐私政策</a>·<a href="terms.html">用户协议</a>·<a href="authorization.html">数据授权书</a>
+    <div style="margin-top:6px">传统文化趣味参考 · 不承诺任何命运结果</div>
+  </footer>
+
+  <script src="js/api.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

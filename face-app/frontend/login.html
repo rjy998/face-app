@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>登录 / 注册 · 面相识别解读</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <header class="nav">
+    <span class="logo">面相识别解读</span>
+    <span class="spacer"></span>
+    <a href="index.html">返回首页</a>
+  </header>
+
+  <main class="wrap narrow">
+    <section class="card">
+      <h2 id="formTitle">登录</h2>
+      <p class="muted">登录后可以保存解读历史、随时回看或删除自己的照片与记录。</p>
+
+      <label for="username">用户名</label>
+      <input id="username" type="text" autocomplete="username" placeholder="3-32 位中文 / 字母 / 数字" />
+
+      <label for="password">密码</label>
+      <input id="password" type="password" autocomplete="current-password" placeholder="至少 6 位" />
+
+      <button class="btn block" id="btnSubmit" type="button" style="margin-top:16px">登录</button>
+      <div class="row" style="margin-top:10px">
+        <button class="btn ghost" id="btnSwitch" type="button">没有账号？去注册</button>
+        <button class="btn ghost" id="btnGuest" type="button">游客一键体验</button>
+      </div>
+      <div id="message"></div>
+    </section>
+
+    <p class="muted center">
+      游客体验会为你创建一个独立临时账号，不会与其他访客共享记录。
+    </p>
+  </main>
+
+  <footer class="foot">
+    <a href="privacy.html">隐私政策</a>·<a href="terms.html">用户协议</a>·<a href="authorization.html">数据授权书</a>
+  </footer>
+
+  <script src="js/api.js"></script>
+  <script src="js/login.js"></script>
+</body>
+</html>
